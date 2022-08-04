@@ -9,4 +9,5 @@ public class ItemDrop : MonoBehaviour
     //item抛物线移动,shadow直线移动,保持与item的x值相同
     //test
     //test1
+    //test2
 }
