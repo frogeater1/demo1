@@ -32,14 +32,14 @@ public class CursorManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventHandler.ItemHold += OnItemHold;
+        EventHandler.ItemSelect += OnItemSelect;
         EventHandler.BeforeUnloadScene += OnBeforeUnloadScene;
     }
 
 
     private void OnDisable()
     {
-        EventHandler.ItemHold -= OnItemHold;
+        EventHandler.ItemSelect -= OnItemSelect;
         EventHandler.BeforeUnloadScene -= OnBeforeUnloadScene;
     }
 
@@ -96,7 +96,7 @@ public class CursorManager : MonoBehaviour
 
     #endregion
 
-    private void OnItemHold(ItemDetails details,int slotIndex)
+    private void OnItemSelect(ItemDetails details,int slotIndex)
     {
         Sprite sprite;
         if (InteractWithUI() && details != null)

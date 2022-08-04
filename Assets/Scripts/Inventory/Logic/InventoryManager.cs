@@ -17,26 +17,26 @@ namespace MFarm.Inventory
 
         private Camera _mainCamera;
 
-        private ItemDetails _curHoldedItemDetails;
-        private int _curHoldedSlotIndex;
+        private ItemDetails _curSelectedItemDetails;
+        private int _curSelectedSlotIndex;
 
         private void OnEnable()
         {
-            EventHandler.ItemHold += OnItemHold;
+            EventHandler.ItemSelect += OnItemSelect;
             EventHandler.ItemUse += OnItemUse;
         }
 
 
         private void OnDisable()
         {
-            EventHandler.ItemHold -= OnItemHold;
+            EventHandler.ItemSelect -= OnItemSelect;
             EventHandler.ItemUse -= OnItemUse;
         }
 
-        private void OnItemHold(ItemDetails itemDetails, int slotIndex)
+        private void OnItemSelect(ItemDetails itemDetails, int slotIndex)
         {
-            _curHoldedItemDetails = itemDetails;
-            _curHoldedSlotIndex = slotIndex;
+            _curSelectedItemDetails = itemDetails;
+            _curSelectedSlotIndex = slotIndex;
         }
 
         private void OnItemUse()
@@ -48,11 +48,11 @@ namespace MFarm.Inventory
             if (tile_details != null)
             {
                 //TOADD:增加其他物品具体使用功能
-                switch (_curHoldedItemDetails.itemType)
+                switch (_curSelectedItemDetails.itemType)
                 {
                     case ItemType.Commodity:
-                        ItemManager.Instance.DropItemInScene(_curHoldedItemDetails.itemID, mouse_world_pos);
-                        RemoveItem(_curHoldedSlotIndex, 1);
+                        ItemManager.Instance.DropItemInScene(_curSelectedItemDetails.itemID, mouse_world_pos);
+                        RemoveItem(_curSelectedSlotIndex, 1);
                         break;
                     case ItemType.Seed:
                         //播种
@@ -61,7 +61,7 @@ namespace MFarm.Inventory
                         //放置家具
                         break;
                     case ItemType.ChopTool or ItemType.HoeTool or ItemType.WaterTool or ItemType.ReapTool or ItemType.CollectTool:
-                        EventHandler.CallToolUse(_curHoldedItemDetails, tile_details, mouse_world_pos);
+                        EventHandler.CallToolUse(_curSelectedItemDetails, tile_details, mouse_world_pos);
                         break;
                 }
             }
@@ -124,9 +124,9 @@ namespace MFarm.Inventory
             if (playerBag.itemList[slotIndex].itemAmount == 0)
             {
                 playerBag.itemList[slotIndex].itemID = 0;
-                _curHoldedItemDetails = null;
-                _curHoldedSlotIndex = -1;
-                EventHandler.CallItemHold(null, -1);
+                _curSelectedItemDetails = null;
+                _curSelectedSlotIndex = -1;
+                EventHandler.CallItemSelect(null, -1);
             }
 
             EventHandler.CallUpdateInventoryUI(InventoryLocation.Bag, playerBag.itemList);

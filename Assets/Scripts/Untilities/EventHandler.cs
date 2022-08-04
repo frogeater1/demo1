@@ -15,12 +15,12 @@ public static class EventHandler
         UpdateInventoryUI?.Invoke(location, list);
     }
 
-    //拿起背包中的物品 //注意选中不一定拿起
-    public static event Action<ItemDetails, int> ItemHold;
+    //选中背包中的物品
+    public static event Action<ItemDetails, int> ItemSelect;
 
-    public static void CallItemHold(ItemDetails details, int slotIndex)
+    public static void CallItemSelect(ItemDetails details, int slotIndex)
     {
-        ItemHold?.Invoke(details, slotIndex);
+        ItemSelect?.Invoke(details, slotIndex);
     }
 
     //使用物品

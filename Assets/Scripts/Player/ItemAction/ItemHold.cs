@@ -11,19 +11,19 @@ public class ItemHold : MonoBehaviour
     
     private void OnEnable()
     {
-        EventHandler.ItemHold += OnItemHold;
+        EventHandler.ItemSelect += OnItemSelect;
         EventHandler.BeforeUnloadScene += OnBeforeUnloadScene;
     }
     
     private void OnDisable()
     {
-        EventHandler.ItemHold -= OnItemHold;
+        EventHandler.ItemSelect -= OnItemSelect;
         EventHandler.BeforeUnloadScene -= OnBeforeUnloadScene;
     }
 
-    private void OnItemHold(ItemDetails details,int slotIndex)
+    private void OnItemSelect(ItemDetails details,int slotIndex)
     {
-        if (details != null)
+        if (details is { canCarried: true })
         {
             _holdItemSpriteRenderer.sprite = details.itemOnWorldSprite ? details.itemOnWorldSprite : details.itemIcon;
             _holdItemSpriteRenderer.enabled = true;

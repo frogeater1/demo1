@@ -23,13 +23,13 @@ public class AnimatorOverride : MonoBehaviour
 
     private void OnEnable()
     {
-        EventHandler.ItemHold += OnItemHold;
+        EventHandler.ItemSelect += OnItemSelect;
         EventHandler.BeforeUnloadScene += OnBeforeUnloadScene;
     }
 
     private void OnDisable()
     {
-        EventHandler.ItemHold -= OnItemHold;
+        EventHandler.ItemSelect -= OnItemSelect;
         EventHandler.BeforeUnloadScene -= OnBeforeUnloadScene;
     }
 
@@ -38,7 +38,7 @@ public class AnimatorOverride : MonoBehaviour
         SwitchAnimator(BodyState.None);
     }
     
-    private void OnItemHold(ItemDetails details,int slotIndex)
+    private void OnItemSelect(ItemDetails details,int slotIndex)
     {
         BodyState cur_state = details == null
             ? BodyState.None

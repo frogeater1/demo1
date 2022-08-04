@@ -74,9 +74,9 @@ namespace MFarm.Inventory
         {
             if (_itemAmount == 0) return;
 
-            if (slotType == SlotType.Bag && _itemDetails.canCarried)
+            if (slotType == SlotType.Bag)
             {
-                EventHandler.CallItemHold(isSelected ? null : _itemDetails, isSelected ? -1 : slotIndex);
+                EventHandler.CallItemSelect(isSelected ? null : _itemDetails, isSelected ? -1 : slotIndex);
             }
             
             InventoryUI.UpdateSlotHighlight(slotIndex);
