@@ -52,11 +52,8 @@ namespace MFarm.Inventory
                 {
                     case ItemType.Commodity:
                         //TODO:await播动画
-                        if (_curHoldedItemDetails.canDropped && playerBag.itemList[_curHoldedSlotIndex].itemAmount > 0)
-                        {
-                            ItemManager.Instance.DropItemInScene(_curHoldedItemDetails.itemID, mouse_world_pos);
+                        ItemManager.Instance.DropItemInScene(_curHoldedItemDetails.itemID, mouse_world_pos);
                             RemoveItem(_curHoldedSlotIndex, 1);
-                        }
                         break;
                     case ItemType.Seed:
                         //播种
@@ -68,10 +65,12 @@ namespace MFarm.Inventory
                         //砍树
                         break;
                     case ItemType.HoeTool:
+                        TileMapManager.Instance.SetDigTile(tile_details);
                         //锄地
                         break;
                     case ItemType.WaterTool:
                         //浇水
+                        TileMapManager.Instance.SetWaterTile(tile_details);
                         break;
                     case ItemType.ReapTool:
                         //收割

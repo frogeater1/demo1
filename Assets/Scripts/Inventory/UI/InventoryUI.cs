@@ -98,7 +98,6 @@ namespace MFarm.Inventory
         
         public void UpdateSlotHighlight(int index)
         {
-            print(index);
             foreach (SlotUI slot in _playerSlots)
             {
                 if (index != slot.slotIndex)

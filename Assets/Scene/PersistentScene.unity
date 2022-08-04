@@ -1096,8 +1096,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43f3ca314db172c458bb09c06e30221d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  digTile: {fileID: 11400000, guid: 8833fe3e80d2e15449306e3835b238fe, type: 2}
+  waterTile: {fileID: 11400000, guid: 4d7f6a7881a53ad40a656b6bb6ece0d5, type: 2}
   mapDataList:
   - {fileID: 11400000, guid: 68bae147fb28a9d409521b87b68eb9bf, type: 2}
+  currentGrid: {fileID: 0}
 --- !u!4 &1425977502
 Transform:
   m_ObjectHideFlags: 0
