@@ -1,8 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using MFarm.Map;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -10,12 +9,16 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rb;
 
     private Animator[] _animators;
-    
+
     public float speed;
     private float _inputX;
     private float _inputY;
     private bool _isMoving;
     private bool _canInput; //是否允许操作
+
+    private float _mouseX;
+    private float _mouseY;
+    private bool _useTool;
 
     private Vector2 _movement;
 
@@ -31,6 +34,7 @@ public class Player : MonoBehaviour
         EventHandler.BeforeUnloadScene += OnBeforeUnloadScene;
         EventHandler.AfterLoadScene += OnAfterLoadScene;
         EventHandler.MoveToPosition += OnMoveToPosition;
+        EventHandler.ToolUse += OnToolUse;
     }
 
     private void OnDisable()
@@ -38,6 +42,39 @@ public class Player : MonoBehaviour
         EventHandler.BeforeUnloadScene -= OnBeforeUnloadScene;
         EventHandler.AfterLoadScene -= OnAfterLoadScene;
         EventHandler.MoveToPosition -= OnMoveToPosition;
+        EventHandler.ToolUse -= OnToolUse;
+    }
+
+    private void OnToolUse(ItemDetails itemDetails, TileDetails tileDetails, Vector3 mouseWorldPos)
+    {
+        _mouseX = mouseWorldPos.x - transform.position.x;
+        _mouseY = mouseWorldPos.y - (transform.position.y + 0.85f);
+
+        if (Mathf.Abs(_mouseX) > Mathf.Abs(_mouseY))
+            _mouseY = 0;
+        else
+            _mouseX = 0;
+        UniTask.Void(async () =>
+        {
+            var source = new UniTaskCompletionSource();
+            UseToolAnimation(source).Forget();
+            await source.Task;
+            switch (itemDetails.itemType)
+            {
+                case ItemType.HoeTool:
+                    TileMapManager.Instance.SetDigTile(tileDetails);
+                    break;
+                case ItemType.WaterTool:
+                    TileMapManager.Instance.SetWaterTile(tileDetails);
+                    break;
+                case ItemType.BreakTool:
+                    break;
+                case ItemType.ReapTool:
+                    break;
+                case ItemType.ChopTool:
+                    break;
+            }
+        });
     }
 
     private void OnBeforeUnloadScene()
@@ -45,6 +82,7 @@ public class Player : MonoBehaviour
         _canInput = false;
         _movement = Vector2.zero;
     }
+
     private void OnAfterLoadScene()
     {
         _canInput = true;
@@ -61,10 +99,11 @@ public class Player : MonoBehaviour
         {
             PlayerInput();
         }
+
         _isMoving = _movement != Vector2.zero;
         SwitchAnimation();
     }
-    
+
     private void FixedUpdate()
     {
         if (_isMoving)
@@ -76,7 +115,7 @@ public class Player : MonoBehaviour
         _inputX = Input.GetAxisRaw("Horizontal");
         _inputY = Input.GetAxisRaw("Vertical");
 
-        var tmp_input = new Vector2 (_inputX, _inputY);
+        var tmp_input = new Vector2(_inputX, _inputY);
         if (_inputX != 0 && _inputY != 0)
         {
             tmp_input.Normalize();
@@ -95,15 +134,36 @@ public class Player : MonoBehaviour
         _rb.MovePosition(_rb.position + speed * Time.deltaTime * _movement);
     }
 
+
+    private async UniTask UseToolAnimation(UniTaskCompletionSource source)
+    {
+        _useTool = true;
+        _canInput = false;
+        foreach (var anim in _animators)
+        {
+            anim.SetTrigger("useTool");
+            //人物的面朝方向
+            anim.SetFloat("inputX", _mouseX);
+            anim.SetFloat("inputY", _mouseY);
+        }
+        await UniTask.Delay(TimeSpan.FromSeconds(0.45f));
+        source.TrySetResult();
+        await UniTask.Delay(TimeSpan.FromSeconds(0.25f));
+        //等待动画结束
+        _useTool = false;
+        _canInput = true;
+    }
+
     private void SwitchAnimation()
     {
-        foreach (Animator anim in _animators )
+        foreach (Animator anim in _animators)
         {
             anim.SetBool("isMoving", _isMoving);
+            anim.SetFloat("mouseX", _mouseX);
+            anim.SetFloat("mouseY", _mouseY);
             if (!_isMoving) continue;
-            anim.SetFloat("InputX",_movement.x);
-            anim.SetFloat("InputY",_movement.y);
+            anim.SetFloat("inputX", _movement.x);
+            anim.SetFloat("inputY", _movement.y);
         }
     }
-    
 }

@@ -14,7 +14,7 @@ public static class EventHandler
     {
         UpdateInventoryUI?.Invoke(location, list);
     }
-    
+
     //拿起背包中的物品 //注意选中不一定拿起
     public static event Action<ItemDetails, int> ItemHold;
 
@@ -29,6 +29,13 @@ public static class EventHandler
     public static void CallItemUse()
     {
         ItemUse?.Invoke();
+    }
+
+    public static event Action<ItemDetails, TileDetails, Vector3> ToolUse;
+
+    public static void CallToolUse(ItemDetails itemDetails, TileDetails tileDetails, Vector3 mouseWorldPos)
+    {
+        ToolUse?.Invoke(itemDetails, tileDetails, mouseWorldPos);
     }
 
     #endregion

@@ -107,10 +107,10 @@ namespace MFarm.Map
                 _digTilemap.SetTile(pos,digTile);
                 MarkDug(tileDetails);
             }
-            else
-            {
-                Debug.LogError("没有正确获取到DigTileMap");
-            }
+            // else
+            // {
+            //     Debug.LogError("没有正确获取到DigTileMap");
+            // }
         }
 
         private void MarkDug(TileDetails tileDetails)
@@ -127,10 +127,10 @@ namespace MFarm.Map
                 _waterTilemap.SetTile(pos,waterTile);
                 MarkWatered(tileDetails);
             }
-            else
-            {
-                Debug.LogError("没有正确获取到WaterTileMap");
-            }
+            // else
+            // {
+            //     Debug.LogError("没有正确获取到WaterTileMap");
+            // }
         }
 
          private void MarkWatered(TileDetails tileDetails)
