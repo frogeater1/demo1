@@ -10,7 +10,4 @@ public class InventoryBag_SO : ScriptableObject
 {
     public List<InventoryItem> itemList;
 }
-
-// var array =  new InventoryItem[Settings.BagSize];
-// Array.Fill(array,new InventoryItem());
-// itemList  = array.ToList();
+//存数据系统未开发之前暂时在此存背包数据
