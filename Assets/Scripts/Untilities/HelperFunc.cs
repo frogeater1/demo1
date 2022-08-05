@@ -81,7 +81,7 @@ public static class HelperFunc
         Debug.Log("<color=#0000ffff>\t" + s + "\t</color>");
     }
 
-    public static string ToString<T>(T obj)
+    public static string ToJson<T>(T obj)
     {
         return JsonConvert.SerializeObject(obj, Formatting.Indented);
     }

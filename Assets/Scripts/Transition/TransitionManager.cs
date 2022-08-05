@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 namespace MFarm.Transition
@@ -34,11 +35,11 @@ public class TransitionManager : MonoBehaviour
             if(!_isFading)
                 Transition(targetScene, targetPos).Forget();
         }
-
+        
         private async void Start()
         {
             await LoadSceneAndSetActive(startSceneName);
-            _fadeCanvasGroup = FindObjectOfType<CanvasGroup>();//TOBETTER
+            _fadeCanvasGroup = FindObjectOfType<CanvasGroup>();
             EventHandler.CallAfterLoadScene();
         }
 
@@ -77,7 +78,7 @@ public class TransitionManager : MonoBehaviour
             _isFading = true;
             _fadeCanvasGroup.blocksRaycasts = true;
             float speed = Mathf.Abs(_fadeCanvasGroup.alpha - targetAlpha) / Settings.LoadingFadeDuration;
-
+            
             while (!Mathf.Approximately(_fadeCanvasGroup.alpha, targetAlpha))
             {
                 _fadeCanvasGroup.alpha = Mathf.MoveTowards(_fadeCanvasGroup.alpha, targetAlpha, speed * Time.deltaTime);

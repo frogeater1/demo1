@@ -43,6 +43,8 @@ namespace MFarm.Map
             currentGrid = FindObjectOfType<Grid>();
             _digTilemap = GameObject.FindGameObjectWithTag("DigTile").GetComponent<Tilemap>();
             _waterTilemap = GameObject.FindGameObjectWithTag("WaterTile").GetComponent<Tilemap>();
+
+            RefreshTileMap();
         }
 
         private void Start()
@@ -99,13 +101,21 @@ namespace MFarm.Map
             return details;
         }
 
+        private void SetTileDetails(TileDetails tileDetails)
+        {
+            string key = SceneManager.GetActiveScene().name + tileDetails.pos.x + "x" + tileDetails.pos.y + "y";
+            _tileDetailsDict[key] = tileDetails;
+        }
+
         public void SetDigTile(TileDetails tileDetails)
         {
             var pos = new Vector3Int(tileDetails.pos.x, tileDetails.pos.y, 0);
             if (_digTilemap)
             {
-                _digTilemap.SetTile(pos,digTile);
-                MarkDug(tileDetails);
+                _digTilemap.SetTile(pos, digTile);
+                tileDetails.canDig = false;
+                tileDetails.canDropItem = false;
+                tileDetails.daysSinceDug = 0;
             }
             // else
             // {
@@ -113,19 +123,13 @@ namespace MFarm.Map
             // }
         }
 
-        private void MarkDug(TileDetails tileDetails)
-        {
-            tileDetails.canDig = false;
-            tileDetails.canDropItem = false;
-            tileDetails.daysSinceDug = 0;
-        }
-         public void SetWaterTile(TileDetails tileDetails)
+        public void SetWaterTile(TileDetails tileDetails)
         {
             var pos = new Vector3Int(tileDetails.pos.x, tileDetails.pos.y, 0);
             if (_waterTilemap)
             {
-                _waterTilemap.SetTile(pos,waterTile);
-                MarkWatered(tileDetails);
+                _waterTilemap.SetTile(pos, waterTile);
+                tileDetails.daysSinceWatered = 0;
             }
             // else
             // {
@@ -133,10 +137,22 @@ namespace MFarm.Map
             // }
         }
 
-         private void MarkWatered(TileDetails tileDetails)
-         {
-             tileDetails.daysSinceWatered = 0;
-         }
-        
+        private void RefreshTileMap()
+        {
+            string cur_scene_name = SceneManager.GetActiveScene().name;
+            foreach ((string k, TileDetails v) in _tileDetailsDict)
+            {
+                if (k.Contains(cur_scene_name))
+                {
+                    if (v.daysSinceDug > -1)
+                        SetDigTile(v);
+                    if (v.daysSinceWatered > -1)
+                        SetWaterTile(v);
+                    //TOADD:
+                    // if (tileDetails.seedItemID > -1)
+                    //     EventHandler.CallPlantSeedEvent(tileDetails.seedItemID, tileDetails);
+                }
+            }
+        }
     }
 }
