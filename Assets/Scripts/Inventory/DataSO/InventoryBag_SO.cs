@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "InventoryBag_SO", menuName = "Inventory/InventoryDataList")]
+[CreateAssetMenu(fileName = "InventoryBag_SO", menuName = "Inventory/BagData")]
 public class InventoryBag_SO : ScriptableObject
 {
     public List<InventoryItem> itemList;

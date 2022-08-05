@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71793afba18e8d446af35d158b2038c8, type: 3}
-  m_Name: InventoryBag_SO
+  m_Name: BagData_SO
   m_EditorClassIdentifier: 
   itemList:
   - itemID: 1001

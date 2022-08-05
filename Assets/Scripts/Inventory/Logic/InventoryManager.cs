@@ -4,13 +4,15 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using MFarm.Map;
+using UnityEngine.Serialization;
 
 namespace MFarm.Inventory
 {
     public class InventoryManager : Singleton<InventoryManager>
     {
+        [FormerlySerializedAs("itemDataList")]
         [Header("所有物品数据")]
-        public ItemDataList_SO itemDataList;
+        public ItemData_SO itemData;
 
         [Header("主角背包数据")]
         public InventoryBag_SO playerBag;
@@ -81,7 +83,7 @@ namespace MFarm.Inventory
         /// <returns></returns>
         public ItemDetails GetItemDetails(int itemID)
         {
-            return itemDataList.itemDetailsList.Find(i => i.itemID == itemID);
+            return itemData.itemDetailsList.Find(i => i.itemID == itemID);
         }
 
         /// <summary>

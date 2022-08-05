@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 
 public class ItemEditor : EditorWindow
 {
-    private ItemDataList_SO _dataBase;
+    private ItemData_SO _dataBase;
     private List<ItemDetails> _itemDataList = new();
     private VisualTreeAsset _itemRowTemplate;
     private ScrollView _itemDetailsSection;
@@ -94,7 +94,7 @@ public class ItemEditor : EditorWindow
         //     _dataBase = AssetDatabase.LoadAssetAtPath(path, typeof(ItemDataList_SO)) as ItemDataList_SO;
         // }
         
-        _dataBase = AssetDatabase.LoadAssetAtPath<ItemDataList_SO>("Assets/GameData/Inventory/ItemDataList_SO.asset");
+        _dataBase = AssetDatabase.LoadAssetAtPath<ItemData_SO>("Assets/GameData/Inventory/ItemDataList_SO.asset");
         Debug.Assert(_dataBase != null, nameof(_dataBase) + " == null");
         _itemDataList = _dataBase.itemDetailsList;
         //如果不标记则无法保存数据
