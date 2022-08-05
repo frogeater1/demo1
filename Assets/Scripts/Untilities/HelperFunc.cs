@@ -44,9 +44,9 @@ public static class HelperFunc
     
     public static string GetDateText(int year, int month, int day)
     {
-        var date = new DateTime(year, month, day);
-        return date.ToString("D");
-        //return year.ToString() + "年" + month.ToString() + "月" + day.ToString() + "日";
+        //var date = new DateTime(year, month, day);
+        //return date.ToString("D");
+        return year + "年" + month + "月" + day + "日";
     }
     #endregion
     

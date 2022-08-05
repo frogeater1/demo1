@@ -44,7 +44,7 @@ public class TimeManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             _gameDay++;
             EventHandler.CallGameDateUpdate(_gameYear, _gameMonth, _gameDay, _season);

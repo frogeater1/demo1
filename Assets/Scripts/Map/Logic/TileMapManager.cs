@@ -63,7 +63,12 @@ namespace MFarm.Map
                     if (v2.daysSinceWatered > -1)
                         v2.daysSinceWatered = -1; //浇水只持续一天
                     if (v2.daysSinceDug > -1)
+                    {
+                        print(v2.daysSinceDug);
                         v2.daysSinceDug++;
+                        print(v2.daysSinceDug);
+                    }
+
                     if (v2.daysSinceDug > 5 && v2.seedItemID == -1)
                     {
                         v2.daysSinceDug = -1;
@@ -71,6 +76,7 @@ namespace MFarm.Map
                     }
                 }
             }
+
             ReSetCurSceneTileMaps();
         }
 
@@ -135,20 +141,33 @@ namespace MFarm.Map
         //     _tileDetailsDict[key] = tileDetails;
         // }
 
-        public void SetDigTile(TileDetails tileDetails)
+        public void Dig(TileDetails tileDetails)
+        {
+            tileDetails.canDig = false;
+            tileDetails.canDropItem = false;
+            tileDetails.daysSinceDug = 0;
+            SetDigTile(tileDetails);
+        }
+
+        private void SetDigTile(TileDetails tileDetails)
         {
             var pos = new Vector3Int(tileDetails.pos.x, tileDetails.pos.y, 0);
             if (_digTilemap)
             {
                 _digTilemap.SetTile(pos, digTile);
-                tileDetails.canDig = false;
-                tileDetails.canDropItem = false;
-                tileDetails.daysSinceDug = 0;
             }
-            // else
-            // {
-            //     Debug.LogError("没有正确获取到DigTileMap");
-            // }
+#if DEBUGLOG
+            else
+            {
+                Debug.LogError("没有正确获取到DigTileMap");
+            }
+#endif
+        }
+
+        public void Water(TileDetails tileDetails)
+        {
+            tileDetails.daysSinceWatered = 0;
+            SetWaterTile(tileDetails);
         }
 
         public void SetWaterTile(TileDetails tileDetails)
@@ -157,12 +176,13 @@ namespace MFarm.Map
             if (_waterTilemap)
             {
                 _waterTilemap.SetTile(pos, waterTile);
-                tileDetails.daysSinceWatered = 0;
             }
-            // else
-            // {
-            //     Debug.LogError("没有正确获取到WaterTileMap");
-            // }
+#if DEBUGLOG
+            else
+            {
+                Debug.LogError("没有正确获取到WaterTileMap");
+            }
+#endif
         }
 
         private void SetCurSceneTileMaps()
@@ -174,7 +194,10 @@ namespace MFarm.Map
             foreach (TileDetails v in cur_scene_dict.Values)
             {
                 if (v.daysSinceDug > -1)
+                {
                     SetDigTile(v);
+                }
+
                 if (v.daysSinceWatered > -1)
                     SetWaterTile(v);
                 //TOADD:
@@ -186,8 +209,8 @@ namespace MFarm.Map
         private void ReSetCurSceneTileMaps()
         {
             //等待GO支持?.
-            if(_digTilemap) _digTilemap.ClearAllTiles();
-            if (_waterTilemap)_waterTilemap.ClearAllTiles();
+            if (_digTilemap) _digTilemap.ClearAllTiles();
+            if (_waterTilemap) _waterTilemap.ClearAllTiles();
             SetCurSceneTileMaps();
         }
     }

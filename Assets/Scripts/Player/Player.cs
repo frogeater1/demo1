@@ -63,10 +63,10 @@ public class Player : MonoBehaviour
             switch (itemDetails.itemType)
             {
                 case ItemType.HoeTool:
-                    TileMapManager.Instance.SetDigTile(tileDetails);
+                    TileMapManager.Instance.Dig(tileDetails);
                     break;
                 case ItemType.WaterTool:
-                    TileMapManager.Instance.SetWaterTile(tileDetails);
+                    TileMapManager.Instance.Water(tileDetails);
                     break;
                 case ItemType.BreakTool:
                     break;
