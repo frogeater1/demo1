@@ -35,7 +35,7 @@ public class TimeManager : MonoBehaviour
             _tikTime -= Settings.TiksInSecond;
             UpdateGameClock();
         }
-
+#if DEVELOPER_MOD
         if (Input.GetKey(KeyCode.T))
         {
             for (int i = 0; i < 60; i++)
@@ -43,6 +43,13 @@ public class TimeManager : MonoBehaviour
                 UpdateGameClock();
             }
         }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            _gameDay++;
+            EventHandler.CallGameDateUpdate(_gameYear, _gameMonth, _gameDay, _season);
+        }
+#endif
     }
 
     private void NewGameTime()
