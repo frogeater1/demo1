@@ -23,19 +23,24 @@ namespace MFarm.Map
         [Header("地图信息")]
         public List<MapData_SO> mapDataList;
 
-        private readonly Dictionary<string, TileDetails> _tileDetailsDict = new();
+        //两层字典<sceneName,dict<pos,tileDetails>>
+        private readonly Dictionary<string, Dictionary<string, TileDetails>> _tileDetailsDict = new();
 
         public Grid currentGrid;
+
+        private Season _curSeason;
 
 
         private void OnEnable()
         {
             EventHandler.AfterLoadScene += OnAfterLoadScene;
+            EventHandler.GameDateUpdate += OnGameDateUpdate;
         }
 
         private void OnDisable()
         {
             EventHandler.AfterLoadScene -= OnAfterLoadScene;
+            EventHandler.GameDateUpdate -= OnGameDateUpdate;
         }
 
         private void OnAfterLoadScene()
@@ -44,8 +49,31 @@ namespace MFarm.Map
             _digTilemap = GameObject.FindGameObjectWithTag("DigTile").GetComponent<Tilemap>();
             _waterTilemap = GameObject.FindGameObjectWithTag("WaterTile").GetComponent<Tilemap>();
 
-            RefreshTileMap();
+            SetCurSceneTileMaps();
         }
+
+        private void OnGameDateUpdate(int year, int month, int day, Season season)
+        {
+            _curSeason = season;
+            //此处要更新所有场景的数据
+            foreach (var v1 in _tileDetailsDict.Values)
+            {
+                foreach (var v2 in v1.Values)
+                {
+                    if (v2.daysSinceWatered > -1)
+                        v2.daysSinceWatered = -1; //浇水只持续一天
+                    if (v2.daysSinceDug > -1)
+                        v2.daysSinceDug++;
+                    if (v2.daysSinceDug > 5 && v2.seedItemID == -1)
+                    {
+                        v2.daysSinceDug = -1;
+                        v2.canDig = true;
+                    }
+                }
+            }
+            ReSetCurSceneTileMaps();
+        }
+
 
         private void Start()
         {
@@ -57,22 +85,17 @@ namespace MFarm.Map
 
         private void InitTileDetailsDict(MapData_SO mapData)
         {
+            Dictionary<string, TileDetails> cur_scene_dict = new();
             foreach (TileProperty tileProperty in mapData.tileProperties)
             {
-                TileDetails tileDetails;
                 //字典的Key
-                string key = mapData.sceneName + tileProperty.tilePos.x + "x" + tileProperty.tilePos.y + "y";
-                if (_tileDetailsDict.ContainsKey(key))
+                string key = "x" + tileProperty.tilePos.x + "y" + tileProperty.tilePos.y;
+
+                cur_scene_dict.TryGetValue(key, out TileDetails tileDetails);
+                tileDetails ??= new TileDetails
                 {
-                    tileDetails = _tileDetailsDict[key];
-                }
-                else
-                {
-                    tileDetails = new TileDetails
-                    {
-                        pos = tileProperty.tilePos
-                    };
-                }
+                    pos = tileProperty.tilePos
+                };
 
                 switch (tileProperty.tileType)
                 {
@@ -90,22 +113,27 @@ namespace MFarm.Map
                         break;
                 }
 
-                _tileDetailsDict[key] = tileDetails;
+                cur_scene_dict[key] = tileDetails;
             }
+
+            _tileDetailsDict.Add(mapData.sceneName, cur_scene_dict);
         }
 
         public TileDetails GetTileDetails(Vector3Int gridPos)
         {
-            string key = SceneManager.GetActiveScene().name + gridPos.x + "x" + gridPos.y + "y";
-            _tileDetailsDict.TryGetValue(key, out TileDetails details);
+            string key = "x" + gridPos.x + "y" + gridPos.y;
+            _tileDetailsDict.TryGetValue(SceneManager.GetActiveScene().name, out var cur_scene_dict);
+            if (cur_scene_dict == null) return null;
+            cur_scene_dict.TryGetValue(key, out TileDetails details);
             return details;
         }
 
-        private void SetTileDetails(TileDetails tileDetails)
-        {
-            string key = SceneManager.GetActiveScene().name + tileDetails.pos.x + "x" + tileDetails.pos.y + "y";
-            _tileDetailsDict[key] = tileDetails;
-        }
+        //因为都是引用 似乎不需要set
+        // private void SetTileDetails(TileDetails tileDetails)
+        // {
+        //     string key = SceneManager.GetActiveScene().name + tileDetails.pos.x + "x" + tileDetails.pos.y + "y";
+        //     _tileDetailsDict[key] = tileDetails;
+        // }
 
         public void SetDigTile(TileDetails tileDetails)
         {
@@ -137,22 +165,30 @@ namespace MFarm.Map
             // }
         }
 
-        private void RefreshTileMap()
+        private void SetCurSceneTileMaps()
         {
             string cur_scene_name = SceneManager.GetActiveScene().name;
-            foreach ((string k, TileDetails v) in _tileDetailsDict)
+            _tileDetailsDict.TryGetValue(cur_scene_name, out var cur_scene_dict);
+
+            if (cur_scene_dict == null) return;
+            foreach (TileDetails v in cur_scene_dict.Values)
             {
-                if (k.Contains(cur_scene_name))
-                {
-                    if (v.daysSinceDug > -1)
-                        SetDigTile(v);
-                    if (v.daysSinceWatered > -1)
-                        SetWaterTile(v);
-                    //TOADD:
-                    // if (tileDetails.seedItemID > -1)
-                    //     EventHandler.CallPlantSeedEvent(tileDetails.seedItemID, tileDetails);
-                }
+                if (v.daysSinceDug > -1)
+                    SetDigTile(v);
+                if (v.daysSinceWatered > -1)
+                    SetWaterTile(v);
+                //TOADD:
+                // if (tileDetails.seedItemID > -1)
+                //     EventHandler.CallPlantSeedEvent(tileDetails.seedItemID, tileDetails);
             }
+        }
+
+        private void ReSetCurSceneTileMaps()
+        {
+            //等待GO支持?.
+            if(_digTilemap) _digTilemap.ClearAllTiles();
+            if (_waterTilemap)_waterTilemap.ClearAllTiles();
+            SetCurSceneTileMaps();
         }
     }
 }
