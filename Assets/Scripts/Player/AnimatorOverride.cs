@@ -44,10 +44,11 @@ public class AnimatorOverride : MonoBehaviour
             ? BodyState.None
             : details.itemType switch
             {
-                //WORKFLOW
-                ItemType.Seed => BodyState.Carry,
-                ItemType.Commodity => BodyState.Carry,
+                //TOADD
+                ItemType.Seed => BodyState.Hold,
+                ItemType.Commodity => BodyState.Hold,
                 ItemType.HoeTool => BodyState.Hoe,
+                ItemType.WaterTool=> BodyState.Water,
                 _ => BodyState.None
             };
         SwitchAnimator(cur_state);

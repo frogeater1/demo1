@@ -23,7 +23,7 @@ public class ItemHold : MonoBehaviour
 
     private void OnItemSelect(ItemDetails details,int slotIndex)
     {
-        if (details is { canCarried: true })
+        if (details is { canHolded: true })
         {
             _holdItemSpriteRenderer.sprite = details.itemOnWorldSprite ? details.itemOnWorldSprite : details.itemIcon;
             _holdItemSpriteRenderer.enabled = true;

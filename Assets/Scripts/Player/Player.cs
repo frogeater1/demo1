@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
 
     private float _mouseX;
     private float _mouseY;
-    private bool _useTool;
+    private bool _usingTool;
 
     private Vector2 _movement;
 
@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
 
     private void OnToolUse(ItemDetails itemDetails, TileDetails tileDetails, Vector3 mouseWorldPos)
     {
+        if (_usingTool) return;
         _mouseX = mouseWorldPos.x - transform.position.x;
         _mouseY = mouseWorldPos.y - (transform.position.y + 0.85f);
 
@@ -137,8 +138,10 @@ public class Player : MonoBehaviour
 
     private async UniTask UseToolAnimation(UniTaskCompletionSource source)
     {
-        _useTool = true;
+        _usingTool = true;
         _canInput = false;
+        //强制设置movement,避免按住移动键时使用工具的滑行问题
+        _movement = Vector2.zero;
         foreach (var anim in _animators)
         {
             anim.SetTrigger("useTool");
@@ -146,11 +149,12 @@ public class Player : MonoBehaviour
             anim.SetFloat("inputX", _mouseX);
             anim.SetFloat("inputY", _mouseY);
         }
+
         await UniTask.Delay(TimeSpan.FromSeconds(0.45f));
         source.TrySetResult();
         await UniTask.Delay(TimeSpan.FromSeconds(0.25f));
         //等待动画结束
-        _useTool = false;
+        _usingTool = false;
         _canInput = true;
     }
 

@@ -27,8 +27,9 @@ public enum InventoryLocation   //整个包裹的类型
 public enum BodyState
 {
     None,
-    Carry,
+    Hold,
     Hoe,
+    Water,
     Break,
 }
 

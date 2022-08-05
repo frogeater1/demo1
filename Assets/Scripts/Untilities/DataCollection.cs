@@ -14,7 +14,7 @@ public class ItemDetails
     public int itemUseRadius;
     public bool canPickedUp;
     public bool canDropped;
-    public bool canCarried;
+    public bool canHolded;
     public int itemPrice;
     [Range(0, 1)]
     public float sellPercentage;

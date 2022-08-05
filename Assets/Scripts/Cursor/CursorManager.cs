@@ -142,7 +142,7 @@ public class CursorManager : MonoBehaviour
             //TOADD
             ItemType.Commodity => _curItemDetails.canDropped && tile_details.canDropItem,
             ItemType.HoeTool => tile_details.canDig,
-            ItemType.Seed => tile_details.daysSinceDug > -1 && tile_details.seedItemID == -1,
+            ItemType.WaterTool => tile_details.daysSinceDug > -1 && tile_details.seedItemID == -1,
             _ => false
         };
     }

@@ -197,10 +197,10 @@ public class ItemEditor : EditorWindow
             _activeItem.canDropped = evt.newValue;
         });
 
-        _itemDetailsSection.Q<Toggle>("CanCarried").value = _activeItem.canCarried;
+        _itemDetailsSection.Q<Toggle>("CanCarried").value = _activeItem.canHolded;
         _itemDetailsSection.Q<Toggle>("CanCarried").RegisterValueChangedCallback(evt =>
         {
-            _activeItem.canCarried = evt.newValue;
+            _activeItem.canHolded = evt.newValue;
         });
 
         _itemDetailsSection.Q<IntegerField>("Price").value = _activeItem.itemPrice;
