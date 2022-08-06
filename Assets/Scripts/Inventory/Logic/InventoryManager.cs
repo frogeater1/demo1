@@ -53,13 +53,13 @@ namespace MFarm.Inventory
                 switch (CurSelectedItemDetails.itemType)
                 {
                     case ItemType.Commodity:
-                        RemoveItem(CurSelectedSlotIndex, 1);
                         ItemManager.Instance.DropItemInScene(CurSelectedItemDetails.itemID, mouse_world_pos);
+                        RemoveItem(CurSelectedSlotIndex, 1);
                         break;
                     case ItemType.Seed:
                         //播种
-                        RemoveItem(CurSelectedSlotIndex, 1);
                         EventHandler.CallSow(CurSelectedItemDetails.itemID,tile_details);
+                        RemoveItem(CurSelectedSlotIndex, 1);
                         break;
                     case ItemType.Furniture:
                         //放置家具

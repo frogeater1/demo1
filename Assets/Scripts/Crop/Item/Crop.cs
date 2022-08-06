@@ -25,10 +25,10 @@ namespace MFarm.Plant
             // _coll = GetComponent<BoxCollider2D>();
         }
 
-        public void Init(int seedItemID, TileDetails tileDetails)
+        public void Init(TileDetails tileDetails)
         {
             TileDetails = tileDetails;
-            CropDetails = CropManager.Instance.GetCropDetails(seedItemID);
+            CropDetails = CropManager.Instance.GetCropDetails(tileDetails.seedItemID);
             //成长阶段
             int growthStages = CropDetails.growthDays.Length;
             int currentStage = 0;

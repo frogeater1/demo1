@@ -34,7 +34,7 @@ namespace MFarm.Plant
         {
             tileDetails.seedItemID = seedItemID;
             tileDetails.growthDays = 0;
-            CreateCropItem(seedItemID, tileDetails);
+            CreateCropItem(tileDetails);
         }
 
         private void OnAfterLoadScene()
@@ -53,12 +53,12 @@ namespace MFarm.Plant
             return tileDetails.daysSinceDug > -1 && tileDetails.seedItemID == -1 && crop_details != null && crop_details.seasons.Contains(CurSeason);
         }
 
-        private void CreateCropItem(int seedItemID, TileDetails tileDetails)
+        public void CreateCropItem(TileDetails tileDetails)
         {
             //+0.5是为了在格子正中间
             Vector3 pos = new Vector3(tileDetails.pos.x + 0.5f, tileDetails.pos.y + 0.5f, 0);
             Crop cropInstance = Instantiate(normalCropPrefab, pos, Quaternion.identity, _cropParent);
-            cropInstance.Init(seedItemID, tileDetails);
+            cropInstance.Init(tileDetails);
         }
     }
 }

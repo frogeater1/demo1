@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MFarm.Plant;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -72,6 +73,12 @@ namespace MFarm.Map
                         v2.daysSinceDug = -1;
                         v2.canDig = true;
                     }
+
+                    if (v2.seedItemID > 0)
+                    {
+                        v2.growthDays++;
+                    }
+                    
                 }
             }
 
@@ -192,23 +199,28 @@ namespace MFarm.Map
             foreach (TileDetails v in cur_scene_dict.Values)
             {
                 if (v.daysSinceDug > -1)
-                {
                     SetDigTile(v);
-                }
-
                 if (v.daysSinceWatered > -1)
                     SetWaterTile(v);
-                //TOADD: 使用道具设置TileMap
-                // if (tileDetails.seedItemID > -1)
-                //     EventHandler.CallPlantSeedEvent(tileDetails.seedItemID, tileDetails);
+                if (v.seedItemID > 0)
+                    CropManager.Instance.CreateCropItem(v);
+                //TOADD: 其他tilemap的设置
             }
         }
 
         private void ReSetCurSceneTileMaps()
         {
-            //等待GO支持?.
+            //坐等GO支持?.
             if (_digTilemap) _digTilemap.ClearAllTiles();
             if (_waterTilemap) _waterTilemap.ClearAllTiles();
+
+            foreach (var crop in FindObjectsOfType<Crop>())
+            {
+                //TOBETTER: 使用对象池
+                Destroy(crop.gameObject);
+            }
+
+
             SetCurSceneTileMaps();
         }
     }
