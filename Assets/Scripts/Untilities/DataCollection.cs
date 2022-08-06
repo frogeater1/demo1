@@ -1,8 +1,8 @@
-using System.IO;
+using System;
+using MFarm.Plant;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-[System.Serializable]
+[Serializable]
 public class ItemDetails
 {
     public int itemID;
@@ -16,37 +16,39 @@ public class ItemDetails
     public bool canDropped;
     public bool canHolded;
     public int itemPrice;
+
     [Range(0, 1)]
     public float sellPercentage;
 }
 
-[System.Serializable]
+[Serializable]
 public class InventoryItem
 {
     public int itemID;
     public int itemAmount;
 }
 
-[System.Serializable]
+[Serializable]
 public class AnimatorType
 {
-    public BodyState BodyState; 
+    public BodyState BodyState;
     public BodyPart bodyPart;
     public AnimatorOverrideController overrideController;
 }
 
-[System.Serializable]
+//普通的Vector3不能序列化
+[Serializable]
 public class SerializableVector3
 {
     public float x;
     public float y;
     public float z;
-    
+
     public SerializableVector3(Vector3 pos)
     {
-        this.x = pos.x;
-        this.y = pos.y;
-        this.z = pos.z;
+        x = pos.x;
+        y = pos.y;
+        z = pos.z;
     }
 
     public Vector3 ToVector3()
@@ -60,21 +62,21 @@ public class SerializableVector3
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class SceneItem
 {
     public int itemID;
     public SerializableVector3 position;
 }
 
-[System.Serializable]
+[Serializable]
 public class TileProperty
 {
     public Vector2Int tilePos;
     public TileType tileType;
 }
 
-[System.Serializable]
+[Serializable]
 public class TileDetails
 {
     public Vector2Int pos;
@@ -89,12 +91,14 @@ public class TileDetails
     public int daysSinceLastHarvest = -1;
 }
 
-[System.Serializable]
+[Serializable]
 public class CropDetails
 {
     public int seedItemID;
+
     [Header("不同阶段需要的天数")]
     public int[] growthDays;
+
     public int TotalGrowthDays
     {
         get
@@ -104,38 +108,46 @@ public class CropDetails
             {
                 amount += days;
             }
+
             return amount;
         }
     }
 
     [Header("不同生长阶段物品Prefab")]
-    public GameObject[] growthPrefabs;
+    public Crop[] growthPrefabs;
+
     [Header("不同阶段的图片")]
     public Sprite[] growthSprites;
+
     [Header("可种植的季节")]
     public Season[] seasons;
 
     [Space]
     [Header("收割工具")]
     public int[] harvestToolItemID;
+
     [Header("每种工具使用次数")]
     public int[] requireActionCount;
+
     [Header("转换新物品ID")]
     public int transferItemID;
 
     [Space]
     [Header("收割果实信息")]
     public int[] producedItemID;
+
     public int[] producedMinAmount;
     public int[] producedMaxAmount;
     public Vector2 spawnRadius;
 
     [Header("再次生长时间")]
     public int daysToRegrow;
+
     public int regrowTimes;
 
     [Header("Options")]
     public bool generateAtPlayerPosition;
+
     public bool hasAnimation;
     public bool hasParticalEffect;
 
@@ -155,6 +167,7 @@ public class CropDetails
             if (tool == toolID)
                 return true;
         }
+
         return false;
     }
 
@@ -170,6 +183,7 @@ public class CropDetails
             if (harvestToolItemID[i] == toolID)
                 return requireActionCount[i];
         }
+
         return -1;
     }
 }

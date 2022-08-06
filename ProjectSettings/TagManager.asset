@@ -9,6 +9,7 @@ TagManager:
   - CursorCanvas
   - DigTile
   - WaterTile
+  - CropParent
   layers:
   - Default
   - TransparentFX

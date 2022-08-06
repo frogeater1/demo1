@@ -44,7 +44,7 @@ public class AnimatorOverride : MonoBehaviour
             ? BodyState.None
             : details.itemType switch
             {
-                //TOADD
+                //TOADD: 选中道具时的动作
                 ItemType.Seed => BodyState.Hold,
                 ItemType.Commodity => BodyState.Hold,
                 ItemType.HoeTool => BodyState.Hoe,

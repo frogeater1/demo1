@@ -8,9 +8,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using MFarm.Map;
+using MFarm.Plant;
 using Newtonsoft.Json;
 
-public class CursorManager : MonoBehaviour
+public class CursorManager : Singleton<CursorManager>
 {
     public Sprite normal, tool, seed, commodity;
 
@@ -25,9 +26,9 @@ public class CursorManager : MonoBehaviour
     private bool _cursorEnable; //是否刷新鼠标
 
     private bool _cursorValid; //在当前位置是否可用
-
-    private ItemDetails _curItemDetails;
     
+    private ItemDetails CurSelectedItemDetails => InventoryManager.Instance.CurSelectedItemDetails;//保证当前选中道具来源唯一性方便管理
+
     private Transform _playerTransform;
 
     private void OnEnable()
@@ -78,7 +79,7 @@ public class CursorManager : MonoBehaviour
             EventHandler.CallItemUse();
         }
     }
-    
+
 
     #region 设置鼠标样式
 
@@ -96,12 +97,11 @@ public class CursorManager : MonoBehaviour
 
     #endregion
 
-    private void OnItemSelect(ItemDetails details,int slotIndex)
+    private void OnItemSelect(ItemDetails details, int slotIndex)
     {
         Sprite sprite;
         if (InteractWithUI() && details != null)
         {
-            _curItemDetails = details;
             sprite = details.itemType switch
             {
                 ItemType.Seed => seed,
@@ -113,7 +113,6 @@ public class CursorManager : MonoBehaviour
         }
         else
         {
-            _curItemDetails = null;
             sprite = normal;
             _cursorEnable = false;
         }
@@ -130,19 +129,20 @@ public class CursorManager : MonoBehaviour
 
         //判断使用范围
         Vector3Int player_grid_pos = current_grid.WorldToCell(_playerTransform.position);
-        if (_curItemDetails.itemUseRadius < Mathf.Abs(mouse_grid_pos.x - player_grid_pos.x) || _curItemDetails.itemUseRadius < Mathf.Abs(mouse_grid_pos.y - player_grid_pos.y))
+        if (CurSelectedItemDetails.itemUseRadius < Mathf.Abs(mouse_grid_pos.x - player_grid_pos.x) || CurSelectedItemDetails.itemUseRadius < Mathf.Abs(mouse_grid_pos.y - player_grid_pos.y))
             return false;
 
         TileDetails tile_details = TileMapManager.Instance.GetTileDetails(mouse_grid_pos);
         if (tile_details == null)
             return false;
 
-        return _curItemDetails.itemType switch
+        return CurSelectedItemDetails.itemType switch
         {
-            //TOADD
-            ItemType.Commodity => _curItemDetails.canDropped && tile_details.canDropItem,
+            //TOADD: 1.检查是否能使用选中道具
+            ItemType.Commodity => CurSelectedItemDetails.canDropped && tile_details.canDropItem,
             ItemType.HoeTool => tile_details.canDig,
-            ItemType.WaterTool => tile_details.daysSinceDug > -1 && tile_details.seedItemID == -1,
+            ItemType.WaterTool => tile_details.daysSinceDug > -1 && tile_details.daysSinceWatered == -1,
+            ItemType.Seed => CropManager.Instance.CheckCanSow(CurSelectedItemDetails.itemID,tile_details),
             _ => false
         };
     }

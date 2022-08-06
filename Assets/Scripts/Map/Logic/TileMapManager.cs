@@ -28,7 +28,7 @@ namespace MFarm.Map
 
         public Grid currentGrid;
 
-        private Season _curSeason;
+        // private Season _curSeason;
 
 
         private void OnEnable()
@@ -54,7 +54,7 @@ namespace MFarm.Map
 
         private void OnGameDateUpdate(int year, int month, int day, Season season)
         {
-            _curSeason = season;
+            // _curSeason = season;
             //此处要更新所有场景的数据
             foreach (var v1 in _tileDetailsDict.Values)
             {
@@ -64,9 +64,7 @@ namespace MFarm.Map
                         v2.daysSinceWatered = -1; //浇水只持续一天
                     if (v2.daysSinceDug > -1)
                     {
-                        print(v2.daysSinceDug);
                         v2.daysSinceDug++;
-                        print(v2.daysSinceDug);
                     }
 
                     if (v2.daysSinceDug > 5 && v2.seedItemID == -1)
@@ -200,7 +198,7 @@ namespace MFarm.Map
 
                 if (v.daysSinceWatered > -1)
                     SetWaterTile(v);
-                //TOADD:
+                //TOADD: 使用道具设置TileMap
                 // if (tileDetails.seedItemID > -1)
                 //     EventHandler.CallPlantSeedEvent(tileDetails.seedItemID, tileDetails);
             }

@@ -72,7 +72,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5705b40b3469f294badeb97226ed154c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemID: 1001
+  itemID: 0
+  itemDetails:
+    itemID: 0
+    itemName: 
+    itemType: 0
+    itemIcon: {fileID: 0}
+    itemOnWorldSprite: {fileID: 0}
+    itemDescription: 
+    itemUseRadius: 0
+    canPickedUp: 0
+    canDropped: 0
+    canHolded: 0
+    itemPrice: 0
+    sellPercentage: 0
 --- !u!1 &5195643058260152935
 GameObject:
   m_ObjectHideFlags: 0

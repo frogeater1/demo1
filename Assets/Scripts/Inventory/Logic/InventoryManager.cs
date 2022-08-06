@@ -10,7 +10,6 @@ namespace MFarm.Inventory
 {
     public class InventoryManager : Singleton<InventoryManager>
     {
-        [FormerlySerializedAs("itemDataList")]
         [Header("所有物品数据")]
         public ItemData_SO itemData;
 
@@ -19,8 +18,9 @@ namespace MFarm.Inventory
 
         private Camera _mainCamera;
 
-        private ItemDetails _curSelectedItemDetails;
-        private int _curSelectedSlotIndex;
+        public ItemDetails CurSelectedItemDetails { get; private set; }
+
+        public int CurSelectedSlotIndex { get; private set; }
 
         private void OnEnable()
         {
@@ -37,8 +37,8 @@ namespace MFarm.Inventory
 
         private void OnItemSelect(ItemDetails itemDetails, int slotIndex)
         {
-            _curSelectedItemDetails = itemDetails;
-            _curSelectedSlotIndex = slotIndex;
+            CurSelectedItemDetails = itemDetails;
+            CurSelectedSlotIndex = slotIndex;
         }
 
         private void OnItemUse()
@@ -49,21 +49,23 @@ namespace MFarm.Inventory
             var tile_details = TileMapManager.Instance.GetTileDetails(grid_pos);
             if (tile_details != null)
             {
-                //TOADD:增加其他物品具体使用功能
-                switch (_curSelectedItemDetails.itemType)
+                //TOADD: 2. 使用道具
+                switch (CurSelectedItemDetails.itemType)
                 {
                     case ItemType.Commodity:
-                        ItemManager.Instance.DropItemInScene(_curSelectedItemDetails.itemID, mouse_world_pos);
-                        RemoveItem(_curSelectedSlotIndex, 1);
+                        RemoveItem(CurSelectedSlotIndex, 1);
+                        ItemManager.Instance.DropItemInScene(CurSelectedItemDetails.itemID, mouse_world_pos);
                         break;
                     case ItemType.Seed:
                         //播种
+                        RemoveItem(CurSelectedSlotIndex, 1);
+                        EventHandler.CallSow(CurSelectedItemDetails.itemID,tile_details);
                         break;
                     case ItemType.Furniture:
                         //放置家具
                         break;
                     case ItemType.ChopTool or ItemType.HoeTool or ItemType.WaterTool or ItemType.ReapTool or ItemType.CollectTool:
-                        EventHandler.CallToolUse(_curSelectedItemDetails, tile_details, mouse_world_pos);
+                        EventHandler.CallToolUse(CurSelectedItemDetails, tile_details, mouse_world_pos);
                         break;
                 }
             }
@@ -93,7 +95,7 @@ namespace MFarm.Inventory
         /// <param name="toDestroy">是否销毁原有物体</param>
         public void PickUpItem(Item item, bool toDestroy)
         {
-            bool add_success = AddItemAtIndex(item.itemID, GetIndexInBag(item.itemID), 1);
+            bool add_success = AddItemAtIndex(item.ItemID, GetIndexInBag(item.ItemID), 1);
 
             if (add_success && toDestroy)
             {
@@ -126,8 +128,8 @@ namespace MFarm.Inventory
             if (playerBag.itemList[slotIndex].itemAmount == 0)
             {
                 playerBag.itemList[slotIndex].itemID = 0;
-                _curSelectedItemDetails = null;
-                _curSelectedSlotIndex = -1;
+                CurSelectedItemDetails = null;
+                CurSelectedSlotIndex = -1;
                 EventHandler.CallItemSelect(null, -1);
             }
 

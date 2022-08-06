@@ -17,14 +17,12 @@ namespace MFarm.Inventory
 
         private void OnEnable()
         {
-            // EventHandler.InstantiateItemInScene += OnInstantiateItemInScene;
             EventHandler.AfterLoadScene += OnAfterLoadScene;
             EventHandler.BeforeUnloadScene += OnBeforeUnloadScene;
         }
 
         private void OnDisable()
         {
-            // EventHandler.InstantiateItemInScene -= OnInstantiateItemInScene;
             EventHandler.AfterLoadScene -= OnAfterLoadScene;
             EventHandler.BeforeUnloadScene -= OnBeforeUnloadScene;
         }
@@ -45,7 +43,7 @@ namespace MFarm.Inventory
         {
             //instantiate会执行到那个物体的OnEnable()
             Item item = Instantiate(itemPrefab, pos, Quaternion.identity, _itemParent);
-            item.itemID = itemID;
+            item.ItemID = itemID;
         }
 
         private void GetSceneItems()
@@ -56,7 +54,7 @@ namespace MFarm.Inventory
                 child.TryGetComponent(out Item item);
                 if (item)
                 {
-                    list.Add(new SceneItem { itemID = item.itemID, position = new SerializableVector3(item.transform.position) });
+                    list.Add(new SceneItem { itemID = item.ItemID, position = new SerializableVector3(item.transform.position) });
                 }
             }
             
@@ -78,6 +76,7 @@ namespace MFarm.Inventory
 
         public void DropItemInScene(int itemID, Vector3 mouseWorldPos)
         {
+            //TOBETTER:Drop动画
             InstantiateItemInScene(itemID, mouseWorldPos);
         }
     }

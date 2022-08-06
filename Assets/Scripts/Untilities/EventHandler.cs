@@ -1,7 +1,6 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public static class EventHandler
 {
@@ -36,6 +35,13 @@ public static class EventHandler
     public static void CallToolUse(ItemDetails itemDetails, TileDetails tileDetails, Vector3 mouseWorldPos)
     {
         ToolUse?.Invoke(itemDetails, tileDetails, mouseWorldPos);
+    }
+
+    public static event Action<int, TileDetails> Sow;
+
+    public static void CallSow(int itemID, TileDetails tileDetails)
+    {
+        Sow?.Invoke(itemID, tileDetails);
     }
 
     #endregion

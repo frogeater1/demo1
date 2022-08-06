@@ -62,6 +62,7 @@ public class Player : MonoBehaviour
             await source.Task;
             switch (itemDetails.itemType)
             {
+                //TOADD: 其他工具使用
                 case ItemType.HoeTool:
                     TileMapManager.Instance.Dig(tileDetails);
                     break;

@@ -3,17 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimeManager : MonoBehaviour
+public class TimeManager : Singleton<TimeManager>
 {
     private int _gameSecond, _gameMinute, _gameHour, _gameDay, _gameMonth, _gameYear;
-    private Season _season;
+
+    public Season CurSeason { get; private set; }
 
     public bool gameClockPause;
 
     private float _tikTime;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         NewGameTime();
     }
 
@@ -21,7 +23,7 @@ public class TimeManager : MonoBehaviour
     {
         EventHandler.CallGameMinuteUpdate(_gameMinute);
         EventHandler.CallGameHourUpdate(_gameHour);
-        EventHandler.CallGameDateUpdate(_gameYear, _gameMonth, _gameDay,_season);
+        EventHandler.CallGameDateUpdate(_gameYear, _gameMonth, _gameDay,CurSeason);
     }
 
     private void Update()
@@ -47,7 +49,7 @@ public class TimeManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.G))
         {
             _gameDay++;
-            EventHandler.CallGameDateUpdate(_gameYear, _gameMonth, _gameDay, _season);
+            EventHandler.CallGameDateUpdate(_gameYear, _gameMonth, _gameDay, CurSeason);
         }
 #endif
     }
@@ -61,7 +63,7 @@ public class TimeManager : MonoBehaviour
         _gameDay = 1;
         _gameMonth = 1;
         _gameYear = 1;
-        _season = Season.Spring;
+        CurSeason = Season.Spring;
         gameClockPause = false;
     }
 
@@ -86,14 +88,14 @@ public class TimeManager : MonoBehaviour
                         _gameMonth++;
                         _gameDay = 1;
                         //季节直接根据月份赋值
-                        _season = (Season)((_gameMonth - 1) / Settings.MonthInSeason);
+                        CurSeason = (Season)((_gameMonth - 1) / Settings.MonthInSeason);
                         if (_gameMonth == Settings.MonthInYear)
                         {
                             _gameYear++;
                             _gameMonth = 1;
                         }
                     }
-                    EventHandler.CallGameDateUpdate(_gameYear, _gameMonth, _gameDay, _season);
+                    EventHandler.CallGameDateUpdate(_gameYear, _gameMonth, _gameDay, CurSeason);
                 }
                 EventHandler.CallGameHourUpdate(_gameHour);
             }
