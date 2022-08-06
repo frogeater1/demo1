@@ -337,14 +337,23 @@ MonoBehaviour:
     bodyPart: 0
     overrideController: {fileID: 22100000, guid: 860023d0f2e1a484387460dd34768188, type: 2}
   - BodyState: 3
-    bodyPart: 1
-    overrideController: {fileID: 22100000, guid: ce9c85fa4672dbc498194b5f36f54ce6, type: 2}
-  - BodyState: 3
     bodyPart: 2
     overrideController: {fileID: 22100000, guid: 7f034b96a903bba459ff4d4d4c631799, type: 2}
   - BodyState: 3
+    bodyPart: 1
+    overrideController: {fileID: 22100000, guid: ce9c85fa4672dbc498194b5f36f54ce6, type: 2}
+  - BodyState: 3
     bodyPart: 3
     overrideController: {fileID: 22100000, guid: 2f7f004a3a1a62945b5bc999a567e68e, type: 2}
+  - BodyState: 4
+    bodyPart: 2
+    overrideController: {fileID: 22100000, guid: 1d5cb7518e8f55f47b925341ba517274, type: 2}
+  - BodyState: 4
+    bodyPart: 1
+    overrideController: {fileID: 22100000, guid: eb51245fc2f613349ae5689d23ea81b0, type: 2}
+  - BodyState: 4
+    bodyPart: 0
+    overrideController: {fileID: 22100000, guid: 682f168b0176f77439d0fab8e1202676, type: 2}
 --- !u!114 &171382976
 MonoBehaviour:
   m_ObjectHideFlags: 0

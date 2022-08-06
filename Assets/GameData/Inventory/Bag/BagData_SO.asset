@@ -22,9 +22,9 @@ MonoBehaviour:
   - itemID: 1005
     itemAmount: 1
   - itemID: 1009
-    itemAmount: 10
-  - itemID: 0
-    itemAmount: 0
+    itemAmount: 7
+  - itemID: 1006
+    itemAmount: 1
   - itemID: 0
     itemAmount: 0
   - itemID: 0

@@ -219,8 +219,6 @@ namespace MFarm.Map
                 //TOBETTER: 使用对象池
                 Destroy(crop.gameObject);
             }
-
-
             SetCurSceneTileMaps();
         }
     }

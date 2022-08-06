@@ -30,7 +30,9 @@ public enum BodyState
     Hold,
     Hoe,
     Water,
+    Collect,
     Break,
+    //TOADD
 }
 
 public enum BodyPart

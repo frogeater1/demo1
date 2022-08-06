@@ -49,6 +49,7 @@ public class AnimatorOverride : MonoBehaviour
                 ItemType.Commodity => BodyState.Hold,
                 ItemType.HoeTool => BodyState.Hoe,
                 ItemType.WaterTool=> BodyState.Water,
+                ItemType.CollectTool=> BodyState.Collect,
                 _ => BodyState.None
             };
         SwitchAnimator(cur_state);

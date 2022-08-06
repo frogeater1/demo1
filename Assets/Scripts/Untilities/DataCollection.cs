@@ -108,7 +108,6 @@ public class CropDetails
             {
                 amount += days;
             }
-
             return amount;
         }
     }

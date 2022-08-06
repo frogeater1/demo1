@@ -47,6 +47,9 @@ namespace MFarm.Plant
             return cropData.cropDetailsList.Find(i => i.seedItemID == itemID);
         }
 
+        /// <summary>
+        /// Check的时候还没种上,需要传递种子id和地图信息,在Onsow之后则不需要再单独传递种子id
+        /// </summary>
         public bool CheckCanSow(int itemID, TileDetails tileDetails)
         {
             var crop_details = GetCropDetails(itemID);
@@ -59,6 +62,11 @@ namespace MFarm.Plant
             Vector3 pos = new Vector3(tileDetails.pos.x + 0.5f, tileDetails.pos.y + 0.5f, 0);
             Crop cropInstance = Instantiate(normalCropPrefab, pos, Quaternion.identity, _cropParent);
             cropInstance.Init(tileDetails);
+        }
+
+        public bool CheckCanCollect(TileDetails tileDetails)
+        {
+            return tileDetails.growthDays >= GetCropDetails(tileDetails.seedItemID)?.TotalGrowthDays;//任何值(包括null)跟null的比较大小(<,>,>=,<=)永远返回false
         }
     }
 }

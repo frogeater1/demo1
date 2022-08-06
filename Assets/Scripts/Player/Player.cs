@@ -69,6 +69,8 @@ public class Player : MonoBehaviour
                 case ItemType.WaterTool:
                     TileMapManager.Instance.Water(tileDetails);
                     break;
+                case ItemType.CollectTool:
+                    break;
                 case ItemType.BreakTool:
                     break;
                 case ItemType.ReapTool:
