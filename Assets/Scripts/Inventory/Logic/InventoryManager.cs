@@ -101,13 +101,12 @@ namespace MFarm.Inventory
             {
                 Destroy(item.gameObject);
             }
-
-            EventHandler.CallUpdateInventoryUI(InventoryLocation.Bag, playerBag.itemList);
         }
 
         public void AddItem(int itemID,int amount)
         {
             AddItemAtIndex(itemID, GetIndexInBag(itemID), amount);
+            EventHandler.CallUpdateInventoryUI(InventoryLocation.Bag, playerBag.itemList);
         }
         
         public void SwapItem(SlotType slotType, int fromIndex, int toIndex)

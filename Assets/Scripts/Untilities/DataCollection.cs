@@ -170,6 +170,6 @@ public class CropDetails
     public int GetToolEffect(int toolID)
     {
         int i = Array.IndexOf(harvestToolItemIDs, toolID);
-        return i > 0 ? ToolEffects[i] : 0;
+        return i > -1 ? ToolEffects[i] : 0;
     }
 }
