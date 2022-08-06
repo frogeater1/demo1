@@ -95,9 +95,9 @@ namespace MFarm.Inventory
         /// <param name="toDestroy">是否销毁原有物体</param>
         public void PickUpItem(Item item, bool toDestroy)
         {
-            bool add_success = AddItemAtIndex(item.ItemID, GetIndexInBag(item.ItemID), 1);
-
-            if (add_success && toDestroy)
+            AddItem(item.ItemID, 1);
+            //添加物品后直接销毁,如果背包满则再次生成并掉落在地上
+            if (toDestroy)
             {
                 Destroy(item.gameObject);
             }
@@ -105,6 +105,11 @@ namespace MFarm.Inventory
             EventHandler.CallUpdateInventoryUI(InventoryLocation.Bag, playerBag.itemList);
         }
 
+        public void AddItem(int itemID,int amount)
+        {
+            AddItemAtIndex(itemID, GetIndexInBag(itemID), amount);
+        }
+        
         public void SwapItem(SlotType slotType, int fromIndex, int toIndex)
         {
             switch (slotType)
@@ -153,23 +158,28 @@ namespace MFarm.Inventory
             return -1;
         }
 
-        private bool AddItemAtIndex(int ID, int index, int amount)
+        private void AddItemAtIndex(int itemID, int slotIndex, int amount)
         {
             //原来没这个物品
-            if (index == -1)
+            if (slotIndex == -1)
             {
                 int empty_index = GetIndexInBag(0);
-                //没空位
-                if (empty_index == -1) return false;
+                //没空位时掉落在地上
+                if (empty_index == -1)
+                {
+                    ItemManager.Instance.DropItemRandomInScene(itemID);
+                    return;
+                }
                 //有空位
-                playerBag.itemList[empty_index].itemID = ID;
+                playerBag.itemList[empty_index].itemID = itemID;
                 playerBag.itemList[empty_index].itemAmount = amount;
-                return true;
+            }
+            else
+            {
+                //原来有这个物品
+                playerBag.itemList[slotIndex].itemAmount += amount;
             }
 
-            //原来有这个物品
-            playerBag.itemList[index].itemAmount += amount;
-            return true;
 
             //下面这种是struct使用,因为struct是值类型,playerBag.itemList[index]是一个中间表达式(类似于右值的概念),不能修改
             //amount += playerBag.itemList[index].itemAmount;

@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using MFarm.Plant;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class ItemDetails
@@ -108,6 +110,7 @@ public class CropDetails
             {
                 amount += days;
             }
+
             return amount;
         }
     }
@@ -121,22 +124,27 @@ public class CropDetails
     [Header("可种植的季节")]
     public Season[] seasons;
 
+    [FormerlySerializedAs("harvestToolItemID")]
     [Space]
     [Header("收割工具")]
-    public int[] harvestToolItemID;
+    public int[] harvestToolItemIDs;
 
-    [Header("每种工具使用次数")]
-    public int[] requireActionCount;
+    [FormerlySerializedAs("ToolEffect")]
+    [Header("每种工具产生的使用次数(数值越大工具越好)")]
+    public int[] ToolEffects;
+
+    [Header("总共需要被使用工具的次数")]
+    public int needUseToolCount;
 
     [Header("转换新物品ID")]
     public int transferItemID;
 
     [Space]
     [Header("收割果实信息")]
-    public int[] producedItemID;
+    public int[] producedItemIDs;
 
-    public int[] producedMinAmount;
-    public int[] producedMaxAmount;
+    public int[] producedMinAmounts;
+    public int[] producedMaxAmounts;
     public Vector2 spawnRadius;
 
     [Header("再次生长时间")]
@@ -154,35 +162,14 @@ public class CropDetails
     // public Vector3 effectPos;
     // public SoundName soundEffect;
 
-    /// <summary>
-    /// 检查当前工具是否可用
-    /// </summary>
-    /// <param name="toolID">工具ID</param>
-    /// <returns></returns>
-    public bool CheckToolAvailable(int toolID)
+    public bool ToolMatched(int toolID)
     {
-        foreach (var tool in harvestToolItemID)
-        {
-            if (tool == toolID)
-                return true;
-        }
-
-        return false;
+        return harvestToolItemIDs.Contains(toolID);
     }
 
-    /// <summary>
-    /// 获得工具需要使用的次数
-    /// </summary>
-    /// <param name="toolID">工具ID</param>
-    /// <returns></returns>
-    public int GetTotalRequireCount(int toolID)
+    public int GetToolEffect(int toolID)
     {
-        for (int i = 0; i < harvestToolItemID.Length; i++)
-        {
-            if (harvestToolItemID[i] == toolID)
-                return requireActionCount[i];
-        }
-
-        return -1;
+        int i = Array.IndexOf(harvestToolItemIDs, toolID);
+        return i > 0 ? ToolEffects[i] : 0;
     }
 }

@@ -49,6 +49,7 @@
       "url": "https://package.openupm.cn",
       "scopes": [
         "com.cysharp.unitask.compatible",
+        "com.demigiant.dotween",
         "com.littlebigfun.addressable-importer",
         "com.openupm"
       ]

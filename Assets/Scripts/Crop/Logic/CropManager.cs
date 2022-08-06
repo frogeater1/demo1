@@ -64,9 +64,10 @@ namespace MFarm.Plant
             cropInstance.Init(tileDetails);
         }
 
-        public bool CheckCanCollect(TileDetails tileDetails)
+        public bool CheckCanCollect(int itemID, TileDetails tileDetails)
         {
-            return tileDetails.growthDays >= GetCropDetails(tileDetails.seedItemID)?.TotalGrowthDays;//任何值(包括null)跟null的比较大小(<,>,>=,<=)永远返回false
+            var crop_details = GetCropDetails(tileDetails.seedItemID);
+            return tileDetails.growthDays >= crop_details?.TotalGrowthDays && crop_details.ToolMatched(itemID);//任何值(包括null)跟null的比较大小(<,>,>=,<=)永远返回false
         }
     }
 }

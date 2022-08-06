@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using MFarm.Inventory;
 using UnityEngine;
 
 namespace MFarm.Plant
 {
     public class Crop : MonoBehaviour
     {
-        public CropDetails CropDetails { get; set; }
+        private CropDetails _cropDetails;
 
-        public TileDetails TileDetails { get; set; }
+        private TileDetails _tileDetails;
+
+        public int _beHarvestCount;
 
         private Sprite Sprite
         {
@@ -17,8 +20,10 @@ namespace MFarm.Plant
         }
 
         private SpriteRenderer _spriteRenderer;
+
+        private Animator _animator;
         // private BoxCollider2D _coll;
-        
+
         private void Awake()
         {
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -27,12 +32,12 @@ namespace MFarm.Plant
 
         public void Init(TileDetails tileDetails)
         {
-            TileDetails = tileDetails;
-            CropDetails = CropManager.Instance.GetCropDetails(tileDetails.seedItemID);
+            _tileDetails = tileDetails;
+            _cropDetails = CropManager.Instance.GetCropDetails(tileDetails.seedItemID);
             //成长阶段
-            int growthStages = CropDetails.growthDays.Length;
+            int growthStages = _cropDetails.growthDays.Length;
             int currentStage = 0;
-            int dayCounter = CropDetails.TotalGrowthDays;
+            int dayCounter = _cropDetails.TotalGrowthDays;
 
             //倒序计算当前的成长阶段
             for (int i = growthStages - 1; i >= 0; i--)
@@ -43,9 +48,46 @@ namespace MFarm.Plant
                     break;
                 }
 
-                dayCounter -= CropDetails.growthDays[i];
+                dayCounter -= _cropDetails.growthDays[i];
             }
-            Sprite = CropDetails.growthSprites[currentStage];
+
+            Sprite = _cropDetails.growthSprites[currentStage];
+        }
+
+        public void BeHarvested(int toolID)
+        {
+            _beHarvestCount += _cropDetails.GetToolEffect(toolID);
+            //_animator = GetComponentInChildren<Animator>();
+            if (_beHarvestCount < _cropDetails.needUseToolCount)
+            {
+                //动画
+
+                //粒子
+
+                //声音
+            }
+            else
+            {
+                SpawnProduce();
+            }
+        }
+
+        private void SpawnProduce()
+        {
+            //直接添加到背包
+            for (int i = 0; i < _cropDetails.producedItemIDs.Length; i++)
+            {
+                var amount = Random.Range(_cropDetails.producedMinAmounts[i], _cropDetails.producedMaxAmounts[i]);
+                if (_cropDetails.generateAtPlayerPosition)
+                {
+                    InventoryManager.Instance.AddItem(_cropDetails.producedItemIDs[i], amount);
+                }
+                else
+                {
+                    for (int j = 0; j < amount; j++)
+                        ItemManager.Instance.DropItemRandomInScene(_cropDetails.producedItemIDs[i], new Vector3(transform.position.x, transform.position.y + 1f, 0));
+                }
+            }
         }
     }
 }

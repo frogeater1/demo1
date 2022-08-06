@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using MFarm.Map;
 using UnityEngine;
@@ -44,43 +43,7 @@ public class Player : MonoBehaviour
         EventHandler.MoveToPosition -= OnMoveToPosition;
         EventHandler.ToolUse -= OnToolUse;
     }
-
-    private void OnToolUse(ItemDetails itemDetails, TileDetails tileDetails, Vector3 mouseWorldPos)
-    {
-        if (_usingTool) return;
-        _mouseX = mouseWorldPos.x - transform.position.x;
-        _mouseY = mouseWorldPos.y - (transform.position.y + 0.85f);
-
-        if (Mathf.Abs(_mouseX) > Mathf.Abs(_mouseY))
-            _mouseY = 0;
-        else
-            _mouseX = 0;
-        UniTask.Void(async () =>
-        {
-            var source = new UniTaskCompletionSource();
-            UseToolAnimation(source).Forget();
-            await source.Task;
-            switch (itemDetails.itemType)
-            {
-                //TOADD: 其他工具使用
-                case ItemType.HoeTool:
-                    TileMapManager.Instance.Dig(tileDetails);
-                    break;
-                case ItemType.WaterTool:
-                    TileMapManager.Instance.Water(tileDetails);
-                    break;
-                case ItemType.CollectTool:
-                    break;
-                case ItemType.BreakTool:
-                    break;
-                case ItemType.ReapTool:
-                    break;
-                case ItemType.ChopTool:
-                    break;
-            }
-        });
-    }
-
+    
     private void OnBeforeUnloadScene()
     {
         _canInput = false;
@@ -136,6 +99,44 @@ public class Player : MonoBehaviour
     private void Movement()
     {
         _rb.MovePosition(_rb.position + speed * Time.deltaTime * _movement);
+    }
+
+    
+    private void OnToolUse(ItemDetails itemDetails, TileDetails tileDetails, Vector3 mouseWorldPos)
+    {
+        if (_usingTool) return;
+        _mouseX = mouseWorldPos.x - transform.position.x;
+        _mouseY = mouseWorldPos.y - (transform.position.y + 0.85f);
+
+        if (Mathf.Abs(_mouseX) > Mathf.Abs(_mouseY))
+            _mouseY = 0;
+        else
+            _mouseX = 0;
+        UniTask.Void(async () =>
+        {
+            var source = new UniTaskCompletionSource();
+            UseToolAnimation(source).Forget();
+            await source.Task;
+            switch (itemDetails.itemType)
+            {
+                //TOADD: 其他工具使用
+                case ItemType.HoeTool:
+                    TileMapManager.Instance.Dig(tileDetails);
+                    break;
+                case ItemType.WaterTool:
+                    TileMapManager.Instance.Water(tileDetails);
+                    break;
+                case ItemType.CollectTool:
+                    TileMapManager.Instance.Collect(itemDetails.itemID,mouseWorldPos);
+                    break;
+                case ItemType.BreakTool:
+                    break;
+                case ItemType.ReapTool:
+                    break;
+                case ItemType.ChopTool:
+                    break;
+            }
+        });
     }
 
 

@@ -143,7 +143,7 @@ public class CursorManager : Singleton<CursorManager>
             ItemType.HoeTool => tile_details.canDig,
             ItemType.WaterTool => tile_details.daysSinceDug > -1 && tile_details.daysSinceWatered == -1,
             ItemType.Seed => CropManager.Instance.CheckCanSow(CurSelectedItemDetails.itemID,tile_details),
-            ItemType.CollectTool => CropManager.Instance.CheckCanCollect(tile_details),
+            ItemType.CollectTool => CropManager.Instance.CheckCanCollect(CurSelectedItemDetails.itemID,tile_details),
             _ => false
         };
     }

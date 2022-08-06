@@ -30,6 +30,7 @@ MonoBehaviour:
     m_Url: https://package.openupm.cn
     m_Scopes:
     - com.cysharp.unitask.compatible
+    - com.demigiant.dotween
     - com.littlebigfun.addressable-importer
     - com.openupm
     m_IsDefault: 0

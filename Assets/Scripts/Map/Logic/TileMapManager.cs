@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 namespace MFarm.Map
 {
@@ -28,6 +29,7 @@ namespace MFarm.Map
         private readonly Dictionary<string, Dictionary<string, TileDetails>> _tileDetailsDict = new();
 
         public Grid currentGrid;
+        private Collider2D[] _colliders = new Collider2D[10];
 
         // private Season _curSeason;
 
@@ -78,7 +80,6 @@ namespace MFarm.Map
                     {
                         v2.growthDays++;
                     }
-                    
                 }
             }
 
@@ -219,7 +220,23 @@ namespace MFarm.Map
                 //TOBETTER: 使用对象池
                 Destroy(crop.gameObject);
             }
+
             SetCurSceneTileMaps();
+        }
+
+        public void Collect(int toolID,Vector3 mouseWorldPos)
+        {
+            //获取农作物对象
+            Physics2D.OverlapPointNonAlloc(mouseWorldPos, _colliders);
+
+            Crop cur_crop = null;
+            foreach (var coll in _colliders)
+            {
+                coll.TryGetComponent<Crop>( out cur_crop);
+                if (cur_crop) break;
+            }
+            //坐等?.
+            if (cur_crop) cur_crop.BeHarvested(toolID);
         }
     }
 }
