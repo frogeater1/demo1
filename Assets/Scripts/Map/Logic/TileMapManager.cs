@@ -223,8 +223,9 @@ namespace MFarm.Map
 
             SetCurSceneTileMaps();
         }
+        
 
-        public void Collect(int toolID,Vector3 mouseWorldPos)
+        public void Collect(TileDetails tileDetails, int toolID, Vector3 mouseWorldPos)
         {
             //获取农作物对象
             Physics2D.OverlapPointNonAlloc(mouseWorldPos, _colliders);
@@ -232,11 +233,18 @@ namespace MFarm.Map
             Crop cur_crop = null;
             foreach (var coll in _colliders)
             {
-                coll.TryGetComponent<Crop>( out cur_crop);
+                coll.TryGetComponent<Crop>(out cur_crop);
                 if (cur_crop) break;
             }
+
             //坐等?.
-            if (cur_crop) cur_crop.BeHarvested(toolID);
+            if (cur_crop && tileDetails != null)
+            {
+                //TOTEST: 此处会影响到下次种植吗?
+                tileDetails.daysSinceLastHarvested = 0;
+                cur_crop.BeHarvested(toolID);
+            }
         }
+        
     }
 }

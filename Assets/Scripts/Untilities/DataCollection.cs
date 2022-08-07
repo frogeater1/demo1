@@ -90,7 +90,16 @@ public class TileDetails
     public int daysSinceWatered = -1;
     public int seedItemID = -1;
     public int growthDays = -1;
-    public int daysSinceLastHarvest = -1;
+    public int daysSinceLastHarvested = -1;//上次被真正收获的日期
+    public int beHarvestedCount = 0;//被使用工具的次数,不是真正收获的次数,收获成功后重置该值
+
+    public void ResetCropInfo()
+    {
+        seedItemID = -1;
+        growthDays = -1;
+        daysSinceLastHarvested = -1;
+        beHarvestedCount = 0;
+    }
 }
 
 [Serializable]

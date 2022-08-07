@@ -53,7 +53,7 @@ namespace MFarm.Inventory
                 switch (CurSelectedItemDetails.itemType)
                 {
                     case ItemType.Commodity:
-                        ItemManager.Instance.DropItemInScene(CurSelectedItemDetails.itemID, mouse_world_pos);
+                        ItemManager.Instance.DropItemInScene(CurSelectedItemDetails.itemID, mouse_world_pos).Forget();
                         RemoveItem(CurSelectedSlotIndex, 1);
                         break;
                     case ItemType.Seed:

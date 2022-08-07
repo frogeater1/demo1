@@ -127,7 +127,7 @@ public class Player : MonoBehaviour
                     TileMapManager.Instance.Water(tileDetails);
                     break;
                 case ItemType.CollectTool:
-                    TileMapManager.Instance.Collect(itemDetails.itemID,mouseWorldPos);
+                    TileMapManager.Instance.Collect(tileDetails,itemDetails.itemID,mouseWorldPos);
                     break;
                 case ItemType.BreakTool:
                     break;
