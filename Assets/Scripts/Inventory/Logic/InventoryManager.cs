@@ -1,6 +1,5 @@
 using System;
 using Cysharp.Threading.Tasks;
-using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using MFarm.Map;
@@ -166,7 +165,7 @@ namespace MFarm.Inventory
                 //没空位时掉落在地上
                 if (empty_index == -1)
                 {
-                    ItemManager.Instance.DropItemRandomInScene(itemID);
+                    ItemManager.Instance.DropItemRandomInScene(itemID,1);
                     return;
                 }
                 //有空位

@@ -31,6 +31,7 @@ public enum BodyState
     Hoe,
     Water,
     Collect,
+    Chop,
     Break,
     //TOADD
 }

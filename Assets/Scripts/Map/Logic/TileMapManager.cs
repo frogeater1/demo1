@@ -225,7 +225,7 @@ namespace MFarm.Map
         }
         
 
-        public void Collect(TileDetails tileDetails, int toolID, Vector3 mouseWorldPos)
+        public void Harvest(TileDetails tileDetails, int toolID, Vector3 mouseWorldPos)
         {
             //获取农作物对象
             Physics2D.OverlapPointNonAlloc(mouseWorldPos, _colliders);
@@ -233,11 +233,11 @@ namespace MFarm.Map
             Crop cur_crop = null;
             foreach (var coll in _colliders)
             {
+                //BUG: 获取不到为什么会直接报错?
                 coll.TryGetComponent<Crop>(out cur_crop);
                 if (cur_crop) break;
             }
-
-            //坐等?.
+            
             if (cur_crop && tileDetails != null)
             {
                 //TOTEST: 此处会影响到下次种植吗?

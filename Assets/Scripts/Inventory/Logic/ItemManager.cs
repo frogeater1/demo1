@@ -76,11 +76,12 @@ namespace MFarm.Inventory
             }
         }
 
-        public void DropItemRandomInScene(int itemID)
+        public void DropItemRandomInScene(int itemID, int radius)
         {
-            //TOBETTER:Drop动画,Player身上生成,随机飞到附近
+            //TOBETTER:Drop动画,Player身上生成,随机飞到附近 
             Vector2 pos = Random.insideUnitCircle;
-            DropItemInScene(itemID, new Vector3(_player.position.x + pos.x, _player.position.y + pos.y, 0)).Forget();
+            var player_position = _player.position;
+            DropItemInScene(itemID, new Vector3(player_position.x + pos.x * radius, player_position.y + pos.y * radius, 0)).Forget();
         }
 
         public async UniTaskVoid DropItemInScene(int itemID, Vector3 toWorldPos)
@@ -90,17 +91,17 @@ namespace MFarm.Inventory
             Item item = Instantiate(itemPrefab, from_pos, Quaternion.identity, _itemParent);
             item.ItemID = itemID;
             item.coll.enabled = false;
-            var ease = from_pos.y > toWorldPos.y ? Ease.Linear : Ease.InBack;//朝上扔的时候
-            var uniTaskX =  item.transform.DOMoveX(toWorldPos.x, 0.4f).SetEase(Ease.Linear).ToUniTask();
-            var uniTaskY =  item.transform.DOMoveY(toWorldPos.y, 0.4f).SetEase(ease).ToUniTask();
+            var ease = from_pos.y > toWorldPos.y ? Ease.Linear : Ease.InBack; //朝上扔的时候
+            var uniTaskX = item.transform.DOMoveX(toWorldPos.x, 0.4f).SetEase(Ease.Linear).ToUniTask();
+            var uniTaskY = item.transform.DOMoveY(toWorldPos.y, 0.4f).SetEase(ease).ToUniTask();
             await UniTask.WhenAll(uniTaskX, uniTaskY);
             item.coll.enabled = true;
         }
 
-        public void DropItemRandomInScene(int itemID, Vector3 fromWorldPos)
+        public void DropItemRandomInScene(int itemID, Vector3 fromWorldPos, int radius)
         {
             Vector2 pos = Random.insideUnitCircle;
-            DropItemInScene(itemID, fromWorldPos, new Vector3(fromWorldPos.x + pos.x, fromWorldPos.y + pos.y, 0)).Forget();
+            DropItemInScene(itemID, fromWorldPos, new Vector3(fromWorldPos.x + pos.x * radius, fromWorldPos.y + pos.y * radius, 0)).Forget();
         }
 
         private async UniTaskVoid DropItemInScene(int itemID, Vector3 fromWorldPos, Vector3 toWorldPos)
@@ -113,6 +114,7 @@ namespace MFarm.Inventory
             var uniTaskX = item.transform.DOMoveX(toWorldPos.x, 0.4f).SetEase(Ease.Linear).ToUniTask();
             var uniTaskY = item.transform.DOMoveY(toWorldPos.y, 0.4f).SetEase(ease).ToUniTask();
             await UniTask.WhenAll(uniTaskX, uniTaskY);
+            print("1");
             item.coll.enabled = true;
         }
     }

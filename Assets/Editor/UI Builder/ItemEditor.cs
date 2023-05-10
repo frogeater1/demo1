@@ -117,7 +117,7 @@ public class ItemEditor : EditorWindow
             }
         };
 
-        _itemListView.onSelectionChange += OnListSelectionChange;
+        _itemListView.selectionChanged += OnListSelectionChange;
 
         //右侧信息面板不可见
         _itemDetailsSection.visible = false;

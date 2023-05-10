@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Template name="ItemRowTemplate" src="project://database/Assets/Editor/UI%20Builder/ItemRowTemplate.uxml?fileID=9197481963319205126&amp;guid=a6812bde4467843939c04797be1e0bcd&amp;type=3#ItemRowTemplate" />
     <ui:VisualElement name="Container" style="flex-grow: 1; flex-direction: row;">
         <ui:VisualElement name="ItemList" style="height: 100%; width: 30%;">
             <ui:VisualElement name="Header" style="flex-direction: row; justify-content: space-between; margin-left: 2px; margin-right: 2px; margin-top: 2px; margin-bottom: 2px;">
@@ -49,4 +50,5 @@
             </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
+    <ui:Instance template="ItemRowTemplate" name="ItemRowTemplate" />
 </ui:UXML>

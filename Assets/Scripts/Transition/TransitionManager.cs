@@ -39,6 +39,9 @@ public class TransitionManager : MonoBehaviour
         private async void Start()
         {
             await LoadSceneAndSetActive(startSceneName);
+            //TODELETE
+            await SceneManager.LoadSceneAsync("UI");
+            
             _fadeCanvasGroup = FindObjectOfType<CanvasGroup>();
             EventHandler.CallAfterLoadScene();
         }

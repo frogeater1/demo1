@@ -114,6 +114,7 @@ public class Player : MonoBehaviour
             _mouseX = 0;
         UniTask.Void(async () =>
         {
+            //这里先forget再await而不是直接await UseToolAnimation()是因为这样可以在UseToolAnimation()中任意位置结束使用TrySetResult()结束await
             var source = new UniTaskCompletionSource();
             UseToolAnimation(source).Forget();
             await source.Task;
@@ -127,13 +128,14 @@ public class Player : MonoBehaviour
                     TileMapManager.Instance.Water(tileDetails);
                     break;
                 case ItemType.CollectTool:
-                    TileMapManager.Instance.Collect(tileDetails,itemDetails.itemID,mouseWorldPos);
+                    TileMapManager.Instance.Harvest(tileDetails,itemDetails.itemID,mouseWorldPos);
+                    break;
+                case ItemType.ChopTool:
+                    TileMapManager.Instance.Harvest(tileDetails,itemDetails.itemID,mouseWorldPos);
                     break;
                 case ItemType.BreakTool:
                     break;
                 case ItemType.ReapTool:
-                    break;
-                case ItemType.ChopTool:
                     break;
             }
         });

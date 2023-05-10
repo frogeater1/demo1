@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using MFarm.Inventory;
-using Newtonsoft.Json.Serialization;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using MFarm.Map;
 using MFarm.Plant;
-using Newtonsoft.Json;
 
 public class CursorManager : Singleton<CursorManager>
 {
@@ -143,7 +141,8 @@ public class CursorManager : Singleton<CursorManager>
             ItemType.HoeTool => tile_details.canDig,
             ItemType.WaterTool => tile_details.daysSinceDug > -1 && tile_details.daysSinceWatered == -1,
             ItemType.Seed => CropManager.Instance.CheckCanSow(CurSelectedItemDetails.itemID,tile_details),
-            ItemType.CollectTool => CropManager.Instance.CheckCanCollect(CurSelectedItemDetails.itemID,tile_details),
+            ItemType.CollectTool => CropManager.Instance.CheckCanHarvest(CurSelectedItemDetails.itemID,tile_details),
+            ItemType.ChopTool => CropManager.Instance.CheckCanHarvest(CurSelectedItemDetails.itemID,tile_details),
             _ => false
         };
     }

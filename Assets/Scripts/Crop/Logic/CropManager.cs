@@ -13,8 +13,6 @@ namespace MFarm.Plant
 
         private Transform _cropParent;
 
-        public Crop normalCropPrefab;
-
         private Season CurSeason => TimeManager.Instance.CurSeason;
 
         private void OnEnable()
@@ -55,19 +53,41 @@ namespace MFarm.Plant
             var crop_details = GetCropDetails(itemID);
             return tileDetails.daysSinceDug > -1 && tileDetails.seedItemID == -1 && crop_details != null && crop_details.seasons.Contains(CurSeason);
         }
-
+        
         public void CreateCropItem(TileDetails tileDetails)
         {
+            var cropDetails = CropManager.Instance.GetCropDetails(tileDetails.seedItemID);
+            //成长阶段
+            int growthStages = cropDetails.growthDays.Length;
+            int currentStage = 0;
+            int dayCounter = cropDetails.TotalGrowthDays;
+
+            //倒序计算当前的成长阶段
+            for (int i = growthStages - 1; i >= 0; i--)
+            {
+                if (tileDetails.growthDays >= dayCounter)
+                {
+                    currentStage = i;
+                    break;
+                }
+
+                dayCounter -= cropDetails.growthDays[i];
+            }
+
+            var sprite = cropDetails.growthSprites[currentStage];
+            var prefab = cropDetails.growthPrefabs[currentStage];
+
             //+0.5是为了在格子正中间
             Vector3 pos = new Vector3(tileDetails.pos.x + 0.5f, tileDetails.pos.y + 0.5f, 0);
-            Crop cropInstance = Instantiate(normalCropPrefab, pos, Quaternion.identity, _cropParent);
-            cropInstance.Init(tileDetails);
+            Crop cropInstance = Instantiate(prefab, pos, Quaternion.identity, _cropParent);
+            cropInstance.Init(tileDetails, cropDetails, sprite);
         }
 
-        public bool CheckCanCollect(int itemID, TileDetails tileDetails)
+        public bool CheckCanHarvest(int toolID, TileDetails tileDetails)
         {
             var crop_details = GetCropDetails(tileDetails.seedItemID);
-            return tileDetails.growthDays >= crop_details?.TotalGrowthDays && crop_details.ToolMatched(itemID);//任何值(包括null)跟null的比较大小(<,>,>=,<=)永远返回false
+            return tileDetails.growthDays >= crop_details?.TotalGrowthDays && crop_details.ToolMatched(toolID);//任何值(包括null)跟null的比较大小(<,>,>=,<=)永远返回false
         }
+        
     }
 }
