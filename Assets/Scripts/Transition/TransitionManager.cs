@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 
 namespace MFarm.Transition
 { 
@@ -40,7 +41,7 @@ public class TransitionManager : MonoBehaviour
         {
             await LoadSceneAndSetActive(startSceneName);
             //TODELETE
-            await SceneManager.LoadSceneAsync("UI");
+            // await SceneManager.LoadSceneAsync("UI");
             
             _fadeCanvasGroup = FindObjectOfType<CanvasGroup>();
             EventHandler.CallAfterLoadScene();
